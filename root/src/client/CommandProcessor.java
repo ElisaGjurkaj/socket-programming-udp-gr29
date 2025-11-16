@@ -26,11 +26,16 @@ public class CommandProcessor {
     }
 
     private void ensureDownloadsDirExists() {
-        File dir = new File(ServerConfig.DOWNLOADS);
-        if (!dir.exists()) {
-            dir.mkdir();
+        try {
+            Path path = Paths.get(ServerConfig.DOWNLOADS);
+            if (!Files.exists(path)) {
+                Files.createDirectories(path);
+            }
+        } catch (IOException e) {
+            System.err.println("Gabim gjatë krijimit të direktorisë: " + e.getMessage());
         }
     }
+
 
     public void processCommand(String command) {
         try {
@@ -151,7 +156,7 @@ public class CommandProcessor {
 
         try (FileOutputStream fos = new FileOutputStream(outName)) {
             fos.write(fileBytes);
-            System.out.println("File u shkarkua: " + outName);
+            System.out.println("File u shkarkua: downloads/" + filename);
         } catch (IOException e) {
             System.out.println("Gabim në shkrimin e file: " + e.getMessage());
         }
